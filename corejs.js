@@ -181,3 +181,15 @@ console.dir(Object);
 // func('Uno', 'Due');
 // const wrapped = wrap(func);
 // wrapped('Tre', 'Quatro');
+
+const asyncConvert = (document: Buffer, format: string): Promise<Buffer> =>
+  new Promise((resolve, reject) => {
+    convert(document, format, undefined, (err, data) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data);
+    });
+  });
+
+pdfBuf = await asyncConvert(buffer, '.pdf');
