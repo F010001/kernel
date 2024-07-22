@@ -9,8 +9,9 @@ class Animal extends Object {
   }
 }
 
-// // const animal = new Animal('asd');
+const animal = new Animal('asd');
 
+console.dir(Object);
 // // class Dog extends Animal {
 // //   constructor(name, breed) {
 // //     super(name);
