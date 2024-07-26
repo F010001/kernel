@@ -221,3 +221,8 @@ const writeStream = fs.createWriteStream(destinationFilePath, {
 
 // Перенаправление данных из потока чтения в поток записи
 readStream.pipe(writeStream);
+
+const sayLater = (text, when) => {
+  let task = () => console.log(text);
+  setTimeout(task, when);
+};
