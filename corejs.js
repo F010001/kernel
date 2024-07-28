@@ -513,4 +513,13 @@
 // const a = user.sayHello;
 // a();
 
-console.log(Object.prototype.constructor);
+
+
+// console.log(Object.getOwnPropertyName()); // Примерный вывод:
+// ["length", "name", "prototype", "from", "isArray", "of", ...]
+
+// const arr = [1232132, 12,323]
+
+// arr.asd = 23
+
+// console.log(Object.getPrototypeOf(arr));
