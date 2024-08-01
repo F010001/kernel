@@ -513,8 +513,6 @@
 // const a = user.sayHello;
 // a();
 
-
-
 // console.log(Object.getOwnPropertyName()); // Примерный вывод:
 // ["length", "name", "prototype", "from", "isArray", "of", ...]
 
@@ -523,3 +521,10 @@
 // arr.asd = 23
 
 // console.log(Object.getPrototypeOf(arr));
+
+const buf = Buffer.from('hello world', 'utf8');
+
+console.log(buf.toString('hex'));
+
+console.log(Buffer.from('fhqwhgads', 'utf8'));
+// Prints: <Buffer 66 68 71 77 68 67 61 64 73>
