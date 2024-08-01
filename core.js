@@ -528,3 +528,25 @@ console.log(buf.toString('hex'));
 
 console.log(Buffer.from('fhqwhgads', 'utf8'));
 // Prints: <Buffer 66 68 71 77 68 67 61 64 73>
+
+const fs = require('fs');
+
+console.log('Start');
+
+// Блокирующий коллбэк
+setTimeout(() => {
+  console.log('Long running task started');
+  // Долгий цикл
+  for (let i = 0; i < 1e9; i++) {
+    /* Долгое выполнение */
+  }
+  console.log('Long running task finished');
+}, 0);
+
+// Асинхронное чтение файла
+fs.readFile(__filename, (err, data) => {
+  if (err) throw err;
+  console.log('File read callback executed');
+});
+
+console.log('End');
