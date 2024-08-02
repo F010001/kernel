@@ -1,8 +1,13 @@
-const { parentPort } = require('worker_threads');
+import { parentPort } from 'node:worker_threads';
 
-let counter = 0;
-for (let i = 0; i < 20000000000000; i++) {
-  counter++;
+parentPort.on('message', (msg) => {
+  console.log('In worker after Sharing' + msg);
+});
+
+let result = '';
+for (let i = 0; i < 100000000000000; i++) {
+  i++;
 }
 
-parentPort.postMessage(counter);
+result = 'Done!';
+parentPort.postMessage(result);
