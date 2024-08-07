@@ -1,3 +1,5 @@
+// 'use strict';
+
 // import * as fs from 'fs';
 // import path from 'path';
 // class Animal extends Object {
@@ -522,31 +524,150 @@
 
 // console.log(Object.getPrototypeOf(arr));
 
-const buf = Buffer.from('hello world', 'utf8');
+// const buf = Buffer.from('hello world', 'utf8');
 
-console.log(buf.toString('hex'));
+// console.log(buf.toString('hex'));
 
-console.log(Buffer.from('fhqwhgads', 'utf8'));
-// Prints: <Buffer 66 68 71 77 68 67 61 64 73>
+// console.log(Buffer.from('fhqwhgads', 'utf8'));
+// // Prints: <Buffer 66 68 71 77 68 67 61 64 73>
 
-const fs = require('fs');
+// const fs = require('fs');
 
-console.log('Start');
+// console.log('Start');
 
-// Блокирующий коллбэк
-setTimeout(() => {
-  console.log('Long running task started');
-  // Долгий цикл
-  for (let i = 0; i < 1e9; i++) {
-    /* Долгое выполнение */
-  }
-  console.log('Long running task finished');
-}, 0);
+// // Блокирующий коллбэк
+// setTimeout(() => {
+//   console.log('Long running task started');
+//   // Долгий цикл
+//   for (let i = 0; i < 1e9; i++) {
+//     /* Долгое выполнение */
+//   }
+//   console.log('Long running task finished');
+// }, 0);
 
-// Асинхронное чтение файла
-fs.readFile(__filename, (err, data) => {
-  if (err) throw err;
-  console.log('File read callback executed');
-});
+// // Асинхронное чтение файла
+// fs.readFile(__filename, (err, data) => {
+//   if (err) throw err;
+//   console.log('File read callback executed');
+// });
 
-console.log('End');
+// console.log('End');
+// var x = 10;
+// function outer() {
+//   var x = 20;
+//   function inner() {
+//     x++;
+//     var x = 30;
+//     console.log(x);
+//   }
+//   inner();
+// }
+// outer();
+
+// const obj = {
+//   name: 'Alice',
+//   greet: function () {
+//     console.log(`Hello, ${this.name}!`);
+//     (function () {
+//       console.log(`Hello again, ${this.name}!`);
+//     })();
+//   },
+// };
+// obj.greet();
+
+// async function asyncFunc() {
+//   console.log('Async Function Start');
+//   new Promise((resolve) => setTimeout(resolve, 1000));
+//   const prInst = new Promise((resolve) => setTimeout(resolve, 1000));
+//   console.log('Async Function End');
+// }
+// console.log('Start');
+// asyncFunc();
+// console.log('End');
+
+// async function firstAsync() {
+//   console.log('First Async Start');
+//   await secondAsync();
+//   console.log('First Async End');
+// }
+// async function secondAsync() {
+//   console.log('Second Async');
+// }
+// console.log('Start');
+// firstAsync();
+// console.log('End');
+
+async function asyncFunc1() {
+  await asyncFunc2();
+}
+
+async function asyncFunc2() {
+  console.log('1', 1);
+
+  await asyncFunc3();
+}
+
+async function asyncFunc3() {
+  await asyncFunc4();
+  console.log('1', 2);
+}
+
+async function asyncFunc4() {
+  console.log('1', 3);
+}
+asyncFunc1();
+
+console.log('Main End');
+
+// async function asyncFunc1() {
+//   console.log('Async 1 Start');
+//   await asyncFunc2();
+//   console.log('Async 1 End');
+// }
+
+// async function asyncFunc2() {
+//   console.log('Async 2');
+// }
+
+// asyncFunc1().then(() => {
+//   console.log('Promise Resolved');
+// });
+
+// console.log('Main End');
+
+// console.log('Start');
+
+// setTimeout(() => {
+//   console.log('Timeout 1');
+// }, 1000);
+
+// setTimeout(() => {
+//   console.log('Timeout 2');
+// }, 0);
+
+// Promise.resolve()
+//   .then(() => {
+//     console.log('Promise 1');
+//   })
+//   .then(() => {
+//     console.log('Promise 2');
+//   });
+
+// console.log('End');
+
+// console.log('Start');
+
+// await Promise.resolve()
+//   .then(() => {
+//     console.log('Promise 1');
+//     return Promise.resolve('Promise 2');
+//   })
+//   .then((message) => {
+//     console.log(message);
+//   });
+
+// await Promise.resolve().then(() => {
+//   console.log('Promise 3');
+// });
+
+// console.log('End');
