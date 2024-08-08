@@ -597,27 +597,34 @@
 // firstAsync();
 // console.log('End');
 
-async function asyncFunc1() {
-  await asyncFunc2();
-}
+// async function asyncFunc1() {
+//   await asyncFunc2();
+// }
 
-async function asyncFunc2() {
-  console.log('1', 1);
+// async function asyncFunc2() {
+//   await asyncFunc3();
 
-  await asyncFunc3();
-}
+//   console.log('1', 1);
+// }
 
-async function asyncFunc3() {
-  await asyncFunc4();
-  console.log('1', 2);
-}
+// async function asyncFunc3() {
+//   await asyncFunc4();
 
-async function asyncFunc4() {
-  console.log('1', 3);
-}
-asyncFunc1();
+//   console.log('1', 2);
+// }
 
-console.log('Main End');
+// async function asyncFunc4() {
+//   console.log('1', 3);
+// }
+
+// await asyncFunc1();
+
+// console.log('Main End');
+
+// console.log('1')(function foo() {
+//   console.log('2');
+// })();
+// console.log('3');
 
 // async function asyncFunc1() {
 //   console.log('Async 1 Start');
@@ -671,3 +678,56 @@ console.log('Main End');
 // });
 
 // console.log('End');
+
+// async function asyncFunc1() {
+//   const { promise, resolve, reject } = Promise.withResolvers();
+//   await asyncFunc2(resolve, promise);
+// }
+
+// async function asyncFunc2(resolve, promise) {
+//   await asyncFunc3(resolve, promise);
+//   setTimeout(() => {
+//     promise.then((data) => {
+//       console.log(data);
+//     });
+//   });
+//   console.log('1', 1);
+// }
+
+// async function asyncFunc3(resolve, promise) {
+//   promise.then((data) => {
+//     console.log(data);
+//     return data + 1;
+//   });
+
+//   setTimeout(async () => {
+//     await asyncFunc4(promise);
+//     resolve(1);
+//     console.log('1', 2);
+//   });
+// }
+
+// async function asyncFunc4(promise) {
+//   promise.then((data) => {
+//     return data + 4;
+//   });
+//   console.log('1', 3);
+// }
+
+// asyncFunc1();
+
+// console.log('Main End');
+
+setTimeout(() => console.log(1), 500);
+
+console.log(2);
+
+setTimeout(() => console.log(3));
+
+Promise.resolve(6).then((response) => console.log(response));
+
+Promise.resolve(new Promise((res, rej) => console.log(7)));
+
+console.log(4);
+
+setTimeout(() => console.log(5), 200);
