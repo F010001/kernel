@@ -39,29 +39,139 @@
 
 // module.exports = EventEmmiter;
 
-const emitter = () => {
-  const events = {};
+// const emitter = () => {
+//   const events = {};
 
-  return {
-    on: (name, fn) => {
-      const event = events[name];
-      if (event) event.push(fn);
-      else events[name] = [fn];
-    },
-    emit: (name, ...data) => {
-      const event = events[name];
+//   return {
+//     on: (name, fn) => {
+//       const event = events[name];
+//       if (event) event.push(fn);
+//       else events[name] = [fn];
+//     },
+//     emit: (name, ...data) => {
+//       const event = events[name];
 
-      if (event)
-        event.forEach((fn) => {
-          fn(...data);
-        });
-    },
-  };
+//       if (event)
+//         event.forEach((fn) => {
+//           fn(...data);
+//         });
+//     },
+//   };
+// };
+// const ee = emitter();
+
+// ee.on('event1', (data) => {
+//   console.dir(data);
+// });
+
+// ee.emit('event1', { a: 5 });
+
+// sync
+// const sum = (a, b, callback) => callback(a + b);
+
+// sum(5, 2, console.log.bind(null, 'sum(5,2) ='));
+
+// const wrapasync =
+//   (fn) =>
+//   (...args) =>
+//     setTimeout(() => fn(...args), Math.floor(Math.random() * 1000));
+
+// ('use strict');
+
+// Sequential calls and sequentian execution
+// of 4 pseudo-asynchronous functions
+
+// const readConfig = wrapasync((name, callback) => {
+//   console.log('(1) config loaded: ' + name);
+//   callback(null, { name });
+// });
+
+// readConfig('myConfig', (name) => {
+//   console.log('name', name);
+//   console.log('name');
+// });
+
+// const increment = (a) => {
+//   console.log('data', a);
+// };
+
+// const a = (b, callback) => {
+//   console.log('a', b);
+
+//   callback(b + 2);
+// };
+
+// a(35, increment);
+
+// const total = (items, callback) => {
+//   let result = 0;
+
+//   for (const item of items) {
+//     if (item.price < 0) {
+//       return callback(
+//         new Error(`Item ${item.name} has a negative price of ${item.price}`),
+//         null,
+//       );
+//     }
+//     result += item.price;
+//   }
+
+//   callback(null, result);
+// };
+
+// const electronics = [
+//   { name: 'Laptop', price: 1500 },
+//   { name: 'Keyboard', price: -100 },
+//   { name: 'HDMI cable', price: 10 },
+// ];
+
+// total(electronics, (err, money) => {
+//   if (err) {
+//     console.error(err.message);
+//   } else {
+//     console.log({ money });
+//   }
+// });
+
+'use strict';
+
+const total = (items, callback) => {
+  let result = 0;
+  let index = 0;
+
+  const intervalId = setInterval(() => {
+    const item = items[index];
+    console.log({ check: { item } });
+
+    if (item.price < 0) {
+      clearInterval(intervalId);
+      callback(new Error('Negative price is not allowed'), null);
+      return;
+    }
+
+    result += item.price;
+    index++;
+
+    if (index === items.length) {
+      clearInterval(intervalId);
+      callback(null, result);
+    }
+  }, 1000);
 };
-const ee = emitter();
 
-ee.on('event1', (data) => {
-  console.dir(data);
+const electronics = [
+  { name: 'Laptop', price: 1500 },
+  { name: 'Keyboard', price: 100 },
+  { name: 'HDMI cable', price: 10 },
+];
+
+// Running both totals in parallel
+total(electronics, (error, money) => {
+  if (error) console.error({ error });
+  else console.log({ money });
 });
 
-ee.emit('event1', { a: 5 });
+total(electronics, (error, money) => {
+  if (error) console.error({ error });
+  else console.log({ money });
+});
