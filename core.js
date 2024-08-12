@@ -305,13 +305,13 @@
 //   incr: function () {
 //     console.log(this);
 //     const a = () => {
-//       console.log('this', this);
+//       console.log('this', this.value);
 //     };
 //     a();
 //   },
 // };
-// undefined;
-// obj;
+// // undefined;
+// // obj;
 // obj.incr(); // Что выведет в консоль? Почему? Как исправить?
 
 // let calculator = {
@@ -617,7 +617,7 @@
 //   console.log('1', 3);
 // }
 
-// await asyncFunc1();
+// asyncFunc1();
 
 // console.log('Main End');
 
@@ -681,6 +681,95 @@
 
 // async function asyncFunc1() {
 //   const { promise, resolve, reject } = Promise.withResolvers();
+
+//   await asyncFunc2(resolve, promise);
+// }
+
+// async function asyncFunc2(resolve, promise) {
+//   await asyncFunc3(resolve, promise);
+
+//   setTimeout(() => {
+//     promise.then((data) => {
+//       console.log(data);
+//     });
+//   });
+
+//   console.log('1', 1);
+// }
+
+// async function asyncFunc3(resolve, promise) {
+//   promise.then((data) => {
+//     console.log(data);
+//     return data + 1;
+//   });
+
+//   setTimeout(async () => {
+//     await asyncFunc4(promise);
+
+//     resolve(1);
+
+//     console.log('1', 2);
+//   });
+// }
+
+// async function asyncFunc4(promise) {
+//   promise.then((data) => {
+//     return data + 4;
+//   });
+
+//   console.log('1', 3);
+// }
+
+// asyncFunc1();
+
+// console.log('Main End');
+
+// setTimeout(() => console.log(1), 500);
+
+// console.log(2);
+
+// setTimeout(() => console.log(3));
+
+// Promise.resolve(6).then((response) => console.log(response));
+
+// Promise.resolve(new Promise((res, rej) => console.log(7)));
+
+// console.log(4);
+
+// setTimeout(() => console.log(5), 200);
+
+// import { readFileSync as _readFile } from 'fs';
+
+// function readFile(filePath) {
+//   return new Promise((resolve, reject) => {
+//     _readFile(filePath, 'utf8', (err, data) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(data);
+//       }
+//     });
+//   });
+// }
+
+// readFile('./core.sql', 'binary', (err, data) => {
+//   console.log('data', data);
+// });
+
+// readFile('./core.sql').then((data) => console.log(data));
+
+// console.log(1);
+
+// const a = _readFile('./core.sql', 'binary', (err, data) => {
+//   console.log('data', data);
+// });
+
+// const arr = new Array(2);
+
+// console.log(Object.getPrototypeOf(arr).constructor.isArray);
+
+// async function asyncFunc1() {
+//   const { promise, resolve, reject } = Promise.withResolvers();
 //   await asyncFunc2(resolve, promise);
 // }
 
@@ -717,17 +806,3 @@
 // asyncFunc1();
 
 // console.log('Main End');
-
-setTimeout(() => console.log(1), 500);
-
-console.log(2);
-
-setTimeout(() => console.log(3));
-
-Promise.resolve(6).then((response) => console.log(response));
-
-Promise.resolve(new Promise((res, rej) => console.log(7)));
-
-console.log(4);
-
-setTimeout(() => console.log(5), 200);
