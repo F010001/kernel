@@ -6,7 +6,6 @@ class Queue {
     this.count = 0;
     this.waiting = [];
     this.onProcess = null;
-    this.onDone = null;
     this.onSuccess = null;
     this.onFailure = null;
     this.onDrain = null;
@@ -22,37 +21,38 @@ class Queue {
       this.next(task);
       return;
     }
-    this.waiting.push(task);
+    this.waiting.push({ task, start: Date.now() });
   }
 
   next(task) {
     this.count++;
-    this.onProcess(task, (err, result) => {
-      if (err) {
-        if (this.onFailure) this.onFailure(err);
-      } else if (this.onSuccess) {
-        this.onSuccess(result);
-      }
-      if (this.onDone) this.onDone(err, result);
-      this.count--;
-      if (this.waiting.length > 0) {
-        const task = this.waiting.shift();
-        this.next(task);
-        return;
-      }
-      if (this.count === 0 && this.onDrain) {
-        this.onDrain();
-      }
-    });
+    this.onProcess(task, this.finish.bind(this));
+  }
+
+  nextWait(task) {
+    if (Date.now() - task.time > 2000) this.onFailure(task.name);
+    this.onProcess(task, this.finish.bind(this));
+  }
+
+  finish(err, result) {
+    if (err) {
+      if (this.onFailure) this.onFailure(err);
+    } else if (this.onSuccess) {
+      this.onSuccess(result);
+    }
+    this.count--;
+    if (this.waiting.length > 0) {
+      const task = this.waiting.shift();
+      this.nextWait(task);
+      return;
+    }
+    if (this.count === 0 && this.onDrain) {
+      this.onDrain();
+    }
   }
 
   process(listener) {
     this.onProcess = listener;
-    return this;
-  }
-
-  done(listener) {
-    this.onDone = listener;
     return this;
   }
 
@@ -72,74 +72,18 @@ class Queue {
   }
 }
 
-// Usage
-
-const job = (task, next) => {
-  console.log(`Process: ${task.name}`);
-  setTimeout(next, task.interval, null, task);
-};
-
 const queue = Queue.channels(3)
-  .process(job)
-  .done((err, res) => {
+  .process((task, callback) => {
+    setTimeout(callback, task.interval, null, task);
+  })
+  .success((res) => {
     const { count } = queue;
     const waiting = queue.waiting.length;
     console.log(`Done: ${res.name}, count:${count}, waiting: ${waiting}`);
   })
-  .success((res) => console.log(`Success: ${res.name}`))
   .failure((err) => console.log(`Failure: ${err}`))
   .drain(() => console.log('Queue drain'));
 
-// for (let i = 0; i < 10; i++) {
-//   queue.add({ name: `Task${i}`, interval: i * 1000 });
-// }
-
-class AsyncQueue {
-  constructor(concurrency) {
-    this.concurrency = concurrency;
-    this.count = 0;
-    this.waiting = [];
-    this.onProcess = null;
-  }
-
-  static channels(concurrency) {
-    return new AsyncQueue(concurrency);
-  }
-
-  add(task) {
-    if (!this.onProcess) throw new Error('Have no listener');
-    if (this.count < this.concurrency) {
-      this.next(task);
-      return;
-    } else this.waiting.push(task);
-
-    return this;
-  }
-
-  next(task) {
-    this.count++;
-    this.onProcess(task, (err, result) => {
-      if (err) throw new Error('err');
-      console.log(result);
-      this.count--;
-      if (this.waiting.length > 0) {
-        const task = this.waiting.shift();
-        this.next(task);
-        return;
-      }
-    });
-  }
-
-  process(callback) {
-    this.onProcess = callback;
-    return this;
-  }
-}
-
-const asyncaQueue = AsyncQueue.channels(3).process((task, callback) => {
-  setTimeout(callback, task.interval, null, task);
-});
-
 for (let i = 0; i < 10; i++) {
-  asyncaQueue.add({ name: `Task${i}`, interval: i * 1000 });
+  queue.add({ name: `Task${i}`, interval: i * 1000 });
 }
