@@ -9,6 +9,7 @@ class Queue {
     this.onSuccess = null;
     this.onFailure = null;
     this.onDrain = null;
+    this.waitTimeout = Infinity;
   }
 
   static channels(concurrency) {
@@ -21,7 +22,7 @@ class Queue {
       this.next(task);
       return;
     }
-    this.waiting.push({ task, start: Date.now() });
+    this.waiting.push({ ...task, start: Date.now() });
   }
 
   next(task) {
@@ -30,13 +31,18 @@ class Queue {
   }
 
   nextWait(task) {
-    if (Date.now() - task.time > 2000) this.onFailure(task.name);
-    this.onProcess(task, this.finish.bind(this));
+    this.count++;
+
+    if (Date.now() - task.start > this.waitTimeout) {
+      this.onProcess(new Error(`${task.name}`), this.finish.bind(this));
+    } else {
+      this.onProcess(task, this.finish.bind(this));
+    }
   }
 
   finish(err, result) {
-    if (err) {
-      if (this.onFailure) this.onFailure(err);
+    if (result instanceof Error) {
+      if (this.onFailure) this.onFailure(result);
     } else if (this.onSuccess) {
       this.onSuccess(result);
     }
@@ -49,6 +55,11 @@ class Queue {
     if (this.count === 0 && this.onDrain) {
       this.onDrain();
     }
+  }
+
+  timeout(msc) {
+    this.waitTimeout = msc;
+    return this;
   }
 
   process(listener) {
@@ -70,9 +81,15 @@ class Queue {
     this.onDrain = listener;
     return this;
   }
+
+  priority(flag = true) {
+    this.priorityMode = flag;
+    return this;
+  }
 }
 
 const queue = Queue.channels(3)
+  .timeout(3000)
   .process((task, callback) => {
     setTimeout(callback, task.interval, null, task);
   })
@@ -85,5 +102,5 @@ const queue = Queue.channels(3)
   .drain(() => console.log('Queue drain'));
 
 for (let i = 0; i < 10; i++) {
-  queue.add({ name: `Task${i}`, interval: i * 1000 });
+  queue.add({ name: `Task${i}`, interval: 1000 });
 }
