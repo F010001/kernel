@@ -806,3 +806,43 @@
 // asyncFunc1();
 
 // console.log('Main End');
+
+const axios = require('axios');
+const { performance } = require('perf_hooks');
+
+const baseUrl = 'http://localhost:4000'; // Замените на ваш URL
+const endpoint = '/api/accidents'; // Замените на ваш тестовый endpoint
+
+const token =
+  'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjU0Njg2NjIsImlhdCI6MTcyNTQ1NTQ2MiwicGVybWlzc2lvbnMiOlsiYWN0NiIsImFjdDQiLCJhY3Q1IiwiYWN0MiIsImFjdDIiLCJhY3Q0IiwiYWN0NSIsImFjdDYiLCJhY3QyIiwiYWN0NCIsImFjdDUiLCJhY3Q2Il0sInJvbGVzIjpbImJhY2tlbmQiLCJiYWNrZW5kIiwiYmFja2VuZCIsImJhY2tlbmQiLCJiYWNrZW5kIiwiYmFja2VuZCIsImJhY2tlbmQiLCJiYWNrZW5kIiwiYmFja2VuZCIsImJhY2tlbmQiLCJiYWNrZW5kIiwiYmFja2VuZCJdLCJ0eXBlIjoiYWNjZXNzIiwidXNlcl9pZCI6MTZ9.Q-0wFv7ubMX3OwKuEi8CbaQLsgc6zuUNlvqGvJjD4_-2rUYuoztHcw0x8vkzqvSWAphpvLftXQ5UCCfrpdxQ6g';
+
+async function sendRequest() {
+  try {
+    const startTime = performance.now();
+    const response = await axios.get(`${baseUrl}${endpoint}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const endTime = performance.now();
+    console.log(
+      `Status: ${response.status}, Time: ${(endTime - startTime).toFixed(
+        2,
+      )} ms`,
+    );
+  } catch (error) {
+    console.error(
+      `Error: ${error.response ? error.response.data : error.message}`,
+    );
+  }
+}
+
+async function runLoadTest() {
+  const requests = [];
+  for (let i = 0; i < 1000; i++) {
+    requests.push(sendRequest());
+  }
+  await Promise.all(requests);
+}
+
+runLoadTest();
