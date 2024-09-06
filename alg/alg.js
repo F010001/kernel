@@ -1,26 +1,3 @@
-// function binary_search(arr, elem) {
-//   let low = 0;
-//   let high = arr.length - 1;
-
-//   while (low <= high) {
-//     const mid = Math.floor((low + high) / 2);
-//     const res = arr[mid];
-
-//     if (res === elem) {
-//       console.log(mid);
-//       return;
-//     } else if (res > elem) {
-//       high = mid - 1;
-//     } else if (res < elem) {
-//       low = mid + 1;
-//     }
-//   }
-
-//   return null;
-// }
-
-// binary_search([1, 2, 3, 4, 5], 24);
-
 // function smallest(arr) {
 //   let smallest = arr[0];
 //   let smalletst_index = 0;
@@ -113,23 +90,35 @@
 //   currentNode = currentNode.next;
 // }
 
-function bs(arr, value) {
+function quicksort(arr) {
+  if (arr.length < 2) {
+    return arr;
+  } else {
+    const pivot = arr[0];
+    const less = arr.filter((el) => el < pivot);
+    const greater = arr.filter((el) => el > pivot);
+
+    return quicksort(less).concat([pivot], quicksort(greater));
+  }
+}
+
+console.log(quicksort([10, 5, 2, 3]));
+
+function bs(arr, el) {
   let low = 0;
   let high = arr.length - 1;
 
   while (low <= high) {
-    let mid = Math.floor((low + high) / 2);
+    const mid = Math.floor((low + high) / 2);
 
-    if (arr[mid] === value) {
+    if (el === arr[mid]) {
       return mid;
-    } else if (arr[mid] > value) {
-      high = mid - 1;
-    } else {
+    } else if (el > arr[mid]) {
       low = mid + 1;
+    } else {
+      high = mid - 1;
     }
   }
 
   return -1;
 }
-
-console.log(bs([1, 2, 3, 4, 5, 6, 7], 5)); // 4
