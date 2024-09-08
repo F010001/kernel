@@ -1,94 +1,43 @@
-// function smallest(arr) {
-//   let smallest = arr[0];
-//   let smalletst_index = 0;
+function smallest(arr) {
+  let smallest = arr[0];
+  let smalletst_index = 0;
 
-//   for (let i = 1; i < arr.length; i++) {
-//     if (arr[i] < smallest) {
-//       smallest = arr[i];
-//       smalletst_index = i;
-//     }
-//   }
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] < smallest) {
+      smallest = arr[i];
+      smalletst_index = i;
+    }
+  }
 
-//   return smalletst_index;
-// }
+  return smalletst_index;
+}
 
-// function selectionSort(arr) {
-//   const newArr = [];
+function selectionSort(arr) {
+  const newArr = [];
 
-//   while (arr.length > 0) {
-//     const small = smallest(arr);
+  while (arr.length > 0) {
+    const small = smallest(arr);
 
-//     newArr.push(arr.splice(small, 1)[0]); // Удаляем наименьший элемент и добавляем в новый массив
-//   }
-//   return newArr;
-// }
+    newArr.push(arr.splice(small, 1)[0]); 
+  }
+  return newArr;
+}
 
-// console.log('selectionSort', selectionSort([3, 5, 123, 1]));
 
-// function bubbleSort(arr) {
-//   for (let j = arr.length - 1; j > 0; j--) {
-//     for (let i = 0; i < j; i++) {
-//       if (arr[i] > arr[i + 1]) {
-//         let temp = arr[i];
-//         arr[i] = arr[i + 1];
-//         arr[i + 1] = temp;
-//       }
-//     }
-//   }
+function bubbleSort(arr) {
+  for (let j = arr.length - 1; j > 0; j--) {
+    for (let i = 0; i < j; i++) {
+      if (arr[i] > arr[i + 1]) {
+        let temp = arr[i];
+        arr[i] = arr[i + 1];
+        arr[i + 1] = temp;
+      }
+    }
+  }
 
-//   return arr;
-// }
+  return arr;
+}
 
-// console.log(bubbleSort([2, 5, 6123, 0, -1]));
-
-// class Node {
-//   constructor(value) {
-//     this.value = value;
-//     this.next = null;
-//   }
-// }
-
-// class LinkList {
-//   constructor() {
-//     this.head = null;
-//     this.tail = null;
-//     this.size = 0;
-//   }
-
-//   add(value) {
-//     const node = new Node(value);
-
-//     if (this.head === null) {
-//       this.head = node;
-//       this.tail = node;
-//     } else {
-//       this.tail.next = node;
-//       this.tail = node;
-//     }
-
-//     this.size++;
-//   }
-
-//   log() {
-//     console.log(this.size);
-//   }
-// }
-
-// const list = new LinkList();
-
-// list.add(1);
-// list.add(2);
-// list.add(3);
-// list.add(4);
-
-// list.log();
-
-// let currentNode = list.head;
-
-// while (currentNode !== null) {
-//   console.log(currentNode.value);
-//   currentNode = currentNode.next;
-// }
 
 function quicksort(arr) {
   if (arr.length < 2) {
@@ -102,7 +51,6 @@ function quicksort(arr) {
   }
 }
 
-console.log(quicksort([10, 5, 2, 3]));
 
 function bs(arr, el) {
   let low = 0;
@@ -122,3 +70,103 @@ function bs(arr, el) {
 
   return -1;
 }
+
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
+
+class LinkedList {
+  constructor() {
+    this.head = null;
+  }
+
+  add(value) {
+    const newNode = new Node(value);
+    if (!this.head) {
+      this.head = newNode;
+    } else {
+      let current = this.head;
+      while (current.next) {
+        current = current.next;
+      }
+      current.next = newNode;
+    }
+  }
+
+  mergeSort(head = this.head) {
+    if (!head && !head.next) {
+      return head;
+    }
+
+    const middle = this.getMiddle(head);
+    const nextOfMiddle = middle.next;
+    middle.next = null; 
+
+    const left = this.mergeSort(head);
+    const right = this.mergeSort(nextOfMiddle);
+
+    return this.merge(left, right);
+  }
+
+  getMiddle(head) {
+    if (!head) return head;
+    let slow = head;
+    let fast = head.next;
+
+    while (fast && fast.next) {
+      slow = slow.next;
+      fast = fast.next.next;
+    }
+
+    return slow;
+  }
+
+  merge(left, right) {
+    let dummy = new Node(0); 
+    let current = dummy;
+
+    while (left && right) {
+      if (left.value <= right.value) {
+        current.next = left;
+        left = left.next;
+      } else {
+        current.next = right;
+        right = right.next;
+      }
+      current = current.next;
+    }
+
+
+    current.next = left  || right;
+
+    return dummy.next;
+  }
+
+  print() {
+    let current = this.head;
+    const values = [];
+    while (current) {
+      values.push(current.value);
+      current = current.next;
+    }
+    console.log(values.join(' -> '));
+  }
+}
+
+
+const list = new LinkedList();
+list.add(4);
+list.add(2);
+list.add(1);
+list.add(3);
+
+console.log('До сортировки:');
+list.print();
+
+list.head = list.mergeSort();
+
+console.log('После сортировки:');
+list.print();
