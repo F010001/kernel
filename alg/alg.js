@@ -18,11 +18,10 @@ function selectionSort(arr) {
   while (arr.length > 0) {
     const small = smallest(arr);
 
-    newArr.push(arr.splice(small, 1)[0]); 
+    newArr.push(arr.splice(small, 1)[0]);
   }
   return newArr;
 }
-
 
 function bubbleSort(arr) {
   for (let j = arr.length - 1; j > 0; j--) {
@@ -38,7 +37,6 @@ function bubbleSort(arr) {
   return arr;
 }
 
-
 function quicksort(arr) {
   if (arr.length < 2) {
     return arr;
@@ -50,7 +48,6 @@ function quicksort(arr) {
     return quicksort(less).concat([pivot], quicksort(greater));
   }
 }
-
 
 function bs(arr, el) {
   let low = 0;
@@ -70,7 +67,6 @@ function bs(arr, el) {
 
   return -1;
 }
-
 class Node {
   constructor(value) {
     this.value = value;
@@ -96,36 +92,35 @@ class LinkedList {
     }
   }
 
-  mergeSort(head = this.head) {
-    if (!head && !head.next) {
+  merge_sort(head = this.head) {
+    if (!head || !head.next) {
       return head;
     }
 
-    const middle = this.getMiddle(head);
-    const nextOfMiddle = middle.next;
-    middle.next = null; 
+    const mid = this.get_mid(head);
+    const next_mid = mid.next;
 
-    const left = this.mergeSort(head);
-    const right = this.mergeSort(nextOfMiddle);
+    mid.next = null;
+
+    const left = this.merge_sort(head);
+    const right = this.merge_sort(next_mid);
 
     return this.merge(left, right);
   }
 
-  getMiddle(head) {
-    if (!head) return head;
+  get_mid(head) {
     let slow = head;
-    let fast = head.next;
+    let fast = head;
 
-    while (fast && fast.next) {
+    while (fast && fast.next && fast.next.next) {
       slow = slow.next;
       fast = fast.next.next;
     }
-
     return slow;
   }
 
   merge(left, right) {
-    let dummy = new Node(0); 
+    const dummy = new Node(null);
     let current = dummy;
 
     while (left && right) {
@@ -139,8 +134,8 @@ class LinkedList {
       current = current.next;
     }
 
-
-    current.next = left  || right;
+    if (left) current.next = left;
+    if (right) current.next = right;
 
     return dummy.next;
   }
@@ -156,17 +151,80 @@ class LinkedList {
   }
 }
 
-
 const list = new LinkedList();
 list.add(4);
 list.add(2);
 list.add(1);
-list.add(3);
 
 console.log('До сортировки:');
 list.print();
 
-list.head = list.mergeSort();
+list.head = list.merge_sort();
 
 console.log('После сортировки:');
 list.print();
+
+class Graph {
+  constructor() {
+    this.adjacencyList = {}; // Здесь будем хранить наши вершины и смежные ребра
+  }
+
+  // Добавление вершины
+  addVertex(vertex) {
+    if (!this.adjacencyList[vertex]) {
+      this.adjacencyList[vertex] = [];
+    }
+  }
+
+  // Добавление ребра
+  addEdge(vertex1, vertex2) {
+    if (this.adjacencyList[vertex1] && this.adjacencyList[vertex2]) {
+      this.adjacencyList[vertex1].push(vertex2);
+      this.adjacencyList[vertex2].push(vertex1); // Для неориентированного графа
+    }
+  }
+
+  // Удаление ребра
+  removeEdge(vertex1, vertex2) {
+    this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(
+      (v) => v !== vertex2,
+    );
+    this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(
+      (v) => v !== vertex1,
+    );
+  }
+
+  // Удаление вершины
+  removeVertex(vertex) {
+    while (this.adjacencyList[vertex].length) {
+      const adjacentVertex = this.adjacencyList[vertex].pop();
+      this.removeEdge(vertex, adjacentVertex);
+    }
+    delete this.adjacencyList[vertex];
+  }
+
+  // Вывод графа
+  printGraph() {
+    for (let vertex in this.adjacencyList) {
+      console.log(vertex + ' -> ' + this.adjacencyList[vertex].join(', '));
+    }
+  }
+}
+
+// Пример использования
+const graph = new Graph();
+
+graph.addVertex('A');
+graph.addVertex('B');
+graph.addVertex('C');
+
+graph.addEdge('A', 'B');
+graph.addEdge('A', 'C');
+graph.addEdge('B', 'C');
+
+graph.printGraph();
+
+// Вывод:
+// A -> B, C
+// B -> A, C
+// C -> A, B
