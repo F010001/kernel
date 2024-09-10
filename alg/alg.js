@@ -152,58 +152,98 @@ class LinkedList {
 }
 
 const list = new LinkedList();
-list.add(4);
-list.add(2);
-list.add(1);
+// list.add(4);
+// list.add(2);
+// list.add(1);
 
-console.log('До сортировки:');
-list.print();
+// console.log('До сортировки:');
+// list.print();
 
-list.head = list.merge_sort();
+// list.head = list.merge_sort();
 
-console.log('После сортировки:');
-list.print();
+// console.log('После сортировки:');
+// list.print();
 
 class Graph {
   constructor() {
-    this.adjacencyList = {}; // Здесь будем хранить наши вершины и смежные ребра
+    this.adjacencyList = {};
   }
 
-  // Добавление вершины
   addVertex(vertex) {
     if (!this.adjacencyList[vertex]) {
       this.adjacencyList[vertex] = [];
     }
   }
 
-  // Добавление ребра
   addEdge(vertex1, vertex2) {
     if (this.adjacencyList[vertex1] && this.adjacencyList[vertex2]) {
       this.adjacencyList[vertex1].push(vertex2);
-      this.adjacencyList[vertex2].push(vertex1); // Для неориентированного графа
+      this.adjacencyList[vertex2].push(vertex1);
     }
   }
 
-  // Удаление ребра
   removeEdge(vertex1, vertex2) {
     this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(
-      (v) => v !== vertex2,
+      (vertex) => vertex !== vertex2,
     );
+
     this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(
-      (v) => v !== vertex1,
+      (vertex) => vertex !== vertex1,
     );
   }
 
-  // Удаление вершины
   removeVertex(vertex) {
-    while (this.adjacencyList[vertex].length) {
-      const adjacentVertex = this.adjacencyList[vertex].pop();
-      this.removeEdge(vertex, adjacentVertex);
+    if (this.adjacencyList[vertex]) {
+      while (this.adjacencyList[vertex].length) {
+        const vertex1 = this.adjacencyList[vertex].pop();
+        this.removeEdge(vertex, vertex1);
+      }
     }
+
     delete this.adjacencyList[vertex];
   }
 
-  // Вывод графа
+  bfsPath(startVertex, endVertex) {
+    const queue = [[startVertex]];
+    const visited = {};
+    visited[startVertex] = true;
+
+    while (queue.length > 0) {
+      const path = queue.shift();
+      const vertex = path[path.length - 1];
+
+      if (vertex === endVertex) {
+        return path;
+      }
+
+      this.adjacencyList[vertex].forEach((neighbor) => {
+        if (!visited[neighbor]) {
+          visited[neighbor] = true;
+          const newPath = [...path, neighbor];
+          queue.push(newPath);
+        }
+      });
+    }
+  }
+
+  dfs(startVertex) {
+    const visited = {};
+
+    const dfsHelper = (vertex) => {
+      if (!vertex) return;
+
+      visited[vertex] = true;
+      console.log('vertex dfs', vertex);
+
+      this.adjacencyList[vertex].forEach((neighbor) => {
+        if (!visited[neighbor]) {
+          dfsHelper(neighbor);
+        }
+      });
+    };
+    dfsHelper(startVertex);
+  }
+
   printGraph() {
     for (let vertex in this.adjacencyList) {
       console.log(vertex + ' -> ' + this.adjacencyList[vertex].join(', '));
@@ -211,20 +251,21 @@ class Graph {
   }
 }
 
-// Пример использования
 const graph = new Graph();
 
 graph.addVertex('A');
 graph.addVertex('B');
 graph.addVertex('C');
+graph.addVertex('D');
+graph.addVertex('E');
+graph.addVertex('F');
+graph.addVertex('G');
 
 graph.addEdge('A', 'B');
 graph.addEdge('A', 'C');
-graph.addEdge('B', 'C');
+graph.addEdge('B', 'D');
+graph.addEdge('B', 'E');
+graph.addEdge('C', 'F');
+graph.addEdge('D', 'G');
 
-graph.printGraph();
-
-// Вывод:
-// A -> B, C
-// B -> A, C
-// C -> A, B
+console.log(graph.bfsPath('A', 'B'));
