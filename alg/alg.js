@@ -210,17 +210,19 @@ class Graph {
 
     while (queue.length > 0) {
       const path = queue.shift();
-      const vertex = path[path.length - 1];
+      const potential_vertex = path[path.length - 1];
 
-      if (vertex === endVertex) {
+      if (potential_vertex === endVertex) {
         return path;
       }
 
-      this.adjacencyList[vertex].forEach((neighbor) => {
+      this.adjacencyList[potential_vertex].forEach((neighbor) => {
         if (!visited[neighbor]) {
           visited[neighbor] = true;
-          const newPath = [...path, neighbor];
-          queue.push(newPath);
+
+          const new_path = [...path, neighbor];
+
+          queue.push(new_path);
         }
       });
     }
@@ -268,4 +270,4 @@ graph.addEdge('B', 'E');
 graph.addEdge('C', 'F');
 graph.addEdge('D', 'G');
 
-console.log(graph.bfsPath('A', 'B'));
+console.log(graph.bfsPath('A', 'G'));
